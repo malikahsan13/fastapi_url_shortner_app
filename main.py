@@ -1,3 +1,21 @@
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, HttpUrl
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.orm import sessionmaker, declarative_base, Session
+from fastapi.responses import RedirectResponse
+import string
+import random
+
+DATABASE_URL = "sqlite://urls.db"
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+sessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+Base = declarative_base()
+
+
+def get_db():
+    db = sessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
