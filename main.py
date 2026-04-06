@@ -53,3 +53,16 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+@app.post("/shorten", response_model=URLResponse)
+def create_short_url(request: URLRequest, db: Session = Depends(get_db)):
+    original_url = str(request.original_url)
+    
+    existing = db.query(URL).filter(URL.original_url == original_url).first()
+    if existing:
+        return {
+            "original_url": existing.original_url,
+            "short_code": existing.short_code,
+            "short_url": f"http://localhost:8000/{existing.short_code}"
+        }
+        
+    
