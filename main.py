@@ -26,3 +26,16 @@ class URL(Base):
     id = Column(Integer, primary_key=True, index=True)
     original_url=Column(String, unique=True, nullable=False)
     short_code = Column(String, unique=True, index=True, nullable=False)
+    
+Base.metadata.create_all(bind=engine)
+
+class URLRequest(BaseModel):
+    original_url: HttpUrl
+    
+class URLResponse(BaseModel):
+    original_url: str
+    short_code: str
+    short_url: str
+
+    class Config:
+        orm_mode = True
