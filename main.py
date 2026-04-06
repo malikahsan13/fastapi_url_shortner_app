@@ -39,3 +39,17 @@ class URLResponse(BaseModel):
 
     class Config:
         orm_mode = True
+        
+def generate_short_code(length: int = 6):
+    return "".join(random.choices(string.ascii_letters + string.digits, k=length))
+
+app = FastAPI(title="URL Shortner API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
