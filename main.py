@@ -81,3 +81,14 @@ def create_short_url(request: URLRequest, db: Session = Depends(get_db)):
         "short_url": f"http://localhost:8000/{new_url.short_code}"
     }
     
+@app.get("/all", response_model=List[URLResponse])
+def get_all_urls(db: Session = Depends(get_db)):
+    urls = db.query(URL).all()
+    results = []
+    for url in urls:
+        results.append({
+            "original_url": url.original_url,
+            "short_code": url.short_code,
+            "short_url": f"http://localhost:8000/{url.short_code}"
+        })
+    return results
