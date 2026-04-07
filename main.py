@@ -24,9 +24,16 @@ def get_db():
 class URL(Base):
     __tablename__ = "urls"
     
-    id = Column(Integer, primary_key=True, index=True)
+    id  = Column(Integer, primary_key=True, index=True)
     original_url=Column(String, unique=True, nullable=False)
     short_code = Column(String, unique=True, index=True, nullable=False)
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "original_url": self.original_url,
+            "short_code": self.short_code
+        }
     
 Base.metadata.create_all(bind=engine)
 
@@ -92,3 +99,14 @@ def get_all_urls(db: Session = Depends(get_db)):
             "short_url": f"http://localhost:8000/{url.short_code}"
         })
     return results
+
+@app.get("/{short_url}")
+def redirect_to_original(short_code: str,db: Session= Depends(get_db)):    
+    url_entry = db.query(URL).filter(URL.short_code == short_code).first()
+    if not url_entry:
+        raise HTTPException(status_code=404, detail="Short URL not found")
+    
+    url_map = url_entry.to_dict()
+    return RedirectResponse(url=url_map['original_url'])
+
+
