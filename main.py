@@ -110,3 +110,15 @@ def redirect_to_original(short_code: str,db: Session= Depends(get_db)):
     return RedirectResponse(url=url_map['original_url'])
 
 
+@app.delete("/delete/{short_code}")
+def delete_url(short_code: str, db: Session = Depends(get_db)):
+    url = db.query(URL).filter(URL.short_code == short_code).first()
+    
+    if not url:
+        raise HTTPException(status_code=404, detail="URL not found")
+    
+    db.delete(url)
+    db.commit()
+    return {
+        "message": "URL deleted successfully"
+    }
