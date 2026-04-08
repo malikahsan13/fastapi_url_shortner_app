@@ -19,11 +19,12 @@ A high-performance URL shortening service built with FastAPI, featuring RESTful 
 - **Validation**: Pydantic - Data validation using Python type annotations
 - **HTTP Client**: RedirectResponse with proper 3xx status codes
 - **CORS Middleware**: Configurable cross-origin access control
+- **Package Manager**: uv - Blazing fast Python package installer
 
 ## 📋 Prerequisites
 
 - Python 3.8+
-- pip package manager
+- uv package manager (recommended) or pip
 
 ## 🔧 Installation
 
@@ -34,6 +35,25 @@ A high-performance URL shortening service built with FastAPI, featuring RESTful 
    ```
 
 2. **Install dependencies**
+
+   **Option A: Using uv (Recommended - Faster)**
+   ```bash
+   # Install uv if you haven't already (Windows)
+   powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+   
+   # Install uv if you haven't already (Linux/Mac)
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   
+   # Create virtual environment and install dependencies
+   uv venv
+   source .venv/bin/activate  # Linux/Mac
+   # or
+   .venv\Scripts\activate     # Windows
+   
+   uv pip install fastapi uvicorn sqlalchemy pydantic
+   ```
+
+   **Option B: Using Traditional pip**
    ```bash
    pip install fastapi uvicorn sqlalchemy pydantic
    ```
